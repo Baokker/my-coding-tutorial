@@ -1,0 +1,375 @@
+# 01 - Java 线程基础
+
+## Java 并发全景图
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│                     Java 并发体系演进                              │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  JDK 1.0    Thread + synchronized + wait/notify                  │
+│     │                                                            │
+│     ▼                                                            │
+│  JDK 1.5    java.util.concurrent (JUC) 包                        │
+│     │       Lock, Atomic, Executor, ConcurrentHashMap            │
+│     ▼                                                            │
+│  JDK 1.8    CompletableFuture (异步编程)                          │
+│     │       Stream 并行流                                         │
+│     ▼                                                            │
+│  JDK 19+   Virtual Threads (虚拟线程，类似 Go 的 goroutine)       │
+│                                                                  │
+│  ┌────────────────────────────────────────────────────────┐      │
+│  │  本模块重点：JDK 1.5~1.8 的核心并发 API                  │      │
+│  │  这些是面试和实际开发中最常用的                            │      │
+│  └────────────────────────────────────────────────────────┘      │
+└──────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 1. 创建线程的三种方式
+
+```java
+// 方式一：继承 Thread 类（不推荐，Java 单继承）
+class MyThread extends Thread {
+    @Override
+    public void run() {
+        System.out.println(Thread.currentThread().getName() + ": 运行中");
+    }
+}
+
+// 方式二：实现 Runnable 接口（推荐）
+class MyTask implements Runnable {
+    @Override
+    public void run() {
+        System.out.println(Thread.currentThread().getName() + ": 运行中");
+    }
+}
+
+// 方式三：实现 Callable 接口（可以返回结果 + 抛异常）
+class MyCallable implements Callable<String> {
+    @Override
+    public String call() throws Exception {
+        Thread.sleep(1000);
+        return "任务完成";
+    }
+}
+
+public class ThreadDemo {
+    public static void main(String[] args) throws Exception {
+        // 方式一
+        new MyThread().start();
+
+        // 方式二
+        new Thread(new MyTask()).start();
+
+        // 方式二（Lambda 简写，最常用）
+        new Thread(() -> {
+            System.out.println("Lambda 线程: " + Thread.currentThread().getName());
+        }).start();
+
+        // 方式三
+        FutureTask<String> future = new FutureTask<>(new MyCallable());
+        new Thread(future).start();
+        String result = future.get(); // 阻塞等待结果
+        System.out.println("Callable 结果: " + result);
+    }
+}
+```
+
+```
+三种方式对比：
+
+  ┌───────────────┬──────────────┬──────────────┬──────────────┐
+  │               │  Thread      │  Runnable    │  Callable    │
+  ├───────────────┼──────────────┼──────────────┼──────────────┤
+  │  返回值        │  无          │  无          │  有           │
+  │  异常          │  不能抛      │  不能抛      │  可以抛       │
+  │  继承限制      │  占用继承位   │  不占        │  不占         │
+  │  推荐程度      │  ✗           │  ✓          │  ✓✓          │
+  └───────────────┴──────────────┴──────────────┴──────────────┘
+
+  实际开发中几乎不直接 new Thread()
+  → 用线程池 (ExecutorService) 提交 Runnable/Callable
+```
+
+---
+
+## 2. 线程生命周期
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    Java 线程生命周期                              │
+│                                                                 │
+│                         ┌──────────┐                            │
+│                         │   NEW    │ ← new Thread()             │
+│                         └────┬─────┘                            │
+│                              │ .start()                         │
+│                              ▼                                  │
+│                     ┌──────────────────┐                        │
+│        ┌───────────▶│    RUNNABLE      │◀───────────┐           │
+│        │            │ (就绪 + 运行中)   │            │           │
+│        │            └───┬──────────┬───┘            │           │
+│        │                │          │                │           │
+│        │   ┌────────────┘          └──────────┐     │           │
+│        │   │                                  │     │           │
+│        │   ▼                                  ▼     │           │
+│  ┌─────┴────────┐                    ┌─────────┴──────────┐    │
+│  │   BLOCKED    │                    │    WAITING         │    │
+│  │              │                    │                    │    │
+│  │ 等待获取锁    │                    │ wait()             │    │
+│  │ synchronized │                    │ join()             │    │
+│  │ 进入同步块    │                    │ LockSupport.park() │    │
+│  └──────────────┘                    └────────────────────┘    │
+│        │                                  │                    │
+│        │                                  │                    │
+│        │            ┌─────────────────────┴──────┐             │
+│        │            │     TIMED_WAITING          │             │
+│        │            │                            │             │
+│        │            │ sleep(ms)                   │             │
+│        │            │ wait(ms)                    │             │
+│        │            │ join(ms)                    │             │
+│        │            └────────────────────────────┘             │
+│        │                       │                               │
+│        │                       │ 超时 / 被唤醒                  │
+│        └───────────────────────┘                               │
+│                                                                │
+│                         ┌──────────────┐                       │
+│                         │  TERMINATED  │ ← run() 执行完毕      │
+│                         └──────────────┘                       │
+│                                                                │
+└─────────────────────────────────────────────────────────────────┘
+
+  状态转换摘要：
+  NEW ─start()─▶ RUNNABLE ─run()完毕─▶ TERMINATED
+                     │
+                     ├─ synchronized 竞争锁 ─▶ BLOCKED
+                     ├─ wait()/join()         ─▶ WAITING
+                     └─ sleep(ms)/wait(ms)    ─▶ TIMED_WAITING
+```
+
+---
+
+## 3. synchronized 关键字
+
+```java
+public class SynchronizedDemo {
+
+    private int count = 0;
+
+    // 方式一：同步方法（锁 = this 对象）
+    public synchronized void increment() {
+        count++;
+    }
+
+    // 方式二：同步块（更灵活，可以指定锁对象）
+    private final Object lock = new Object();
+    public void incrementWithBlock() {
+        synchronized (lock) {
+            count++;
+        }
+    }
+
+    // 方式三：静态同步方法（锁 = Class 对象）
+    private static int globalCount = 0;
+    public static synchronized void staticIncrement() {
+        globalCount++;
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        SynchronizedDemo demo = new SynchronizedDemo();
+
+        // 启动 100 个线程同时递增
+        Thread[] threads = new Thread[100];
+        for (int i = 0; i < 100; i++) {
+            threads[i] = new Thread(() -> {
+                for (int j = 0; j < 1000; j++) {
+                    demo.increment();
+                }
+            });
+            threads[i].start();
+        }
+
+        // 等待所有线程完成
+        for (Thread t : threads) {
+            t.join();
+        }
+
+        System.out.println("最终计数: " + demo.count);  // 100000
+    }
+}
+```
+
+```
+synchronized 的锁机制：
+
+  实例方法:                        静态方法:
+  synchronized void foo()         static synchronized void bar()
+
+  ┌──────────────┐                ┌───────────────────┐
+  │  this 对象    │                │  Class 对象        │
+  │  ┌────────┐  │                │  ┌──────────────┐ │
+  │  │ 对象头  │  │                │  │ MyClass.class│ │
+  │  │ Mark   │  │                │  │              │ │
+  │  │ Word   │  │                │  └──────────────┘ │
+  │  └────┬───┘  │                └────────┬──────────┘
+  │       │      │                         │
+  │  锁状态标记   │                    锁状态标记
+  └──────────────┘                ─────────────────────
+
+  同步块:
+  synchronized (lockObj) {
+      // 临界区代码
+  }
+
+  ┌─────────────────────────────────────────────────┐
+  │  线程 A              lockObj              线程 B │
+  │     │                  │                    │   │
+  │     │──monitorenter──▶│                    │   │
+  │     │   获取锁 ✓       │                    │   │
+  │     │                  │◀──monitorenter──│   │
+  │     │                  │   获取锁 ✗(阻塞)  │   │
+  │     │  执行临界区       │        等待...     │   │
+  │     │──monitorexit──▶│                    │   │
+  │     │   释放锁         │──────唤醒────────▶│   │
+  │     │                  │   获取锁 ✓        │   │
+  └─────────────────────────────────────────────────┘
+```
+
+### synchronized 锁升级（JDK 6+ 优化）
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                  synchronized 锁升级过程                       │
+│                                                              │
+│  ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌────────┐ │
+│  │  无锁     │──▶│  偏向锁   │──▶│  轻量级锁  │──▶│ 重量级锁│ │
+│  │          │    │          │    │          │    │        │ │
+│  │ 没有竞争  │    │ 只有一个  │    │ 少量竞争  │    │ 激烈竞争│ │
+│  │          │    │ 线程访问  │    │ CAS 自旋  │    │ OS 挂起│ │
+│  └──────────┘    └──────────┘    └──────────┘    └────────┘ │
+│                                                              │
+│  性能:  快 ────────────────────────────────────────▶ 慢       │
+│                                                              │
+│  偏向锁: 第一个获取锁的线程直接标记，不用 CAS                     │
+│          如果一直是同一个线程，几乎零开销                         │
+│                                                              │
+│  轻量级锁: 其他线程来竞争，CAS 自旋等待                          │
+│           自旋一定次数后升级为重量级锁                            │
+│                                                              │
+│  重量级锁: 竞争激烈，线程挂起等待(OS 级别)                       │
+│           性能最差，但公平                                      │
+│                                                              │
+│  ⚠️ 锁只能升级不能降级                                        │
+└──────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 4. wait / notify 机制
+
+```java
+public class ProducerConsumer {
+    private final Queue<Integer> queue = new LinkedList<>();
+    private final int capacity = 5;
+
+    // 生产者
+    public synchronized void produce(int item) throws InterruptedException {
+        while (queue.size() == capacity) {
+            wait();  // 队列满了，等待消费者消费
+        }
+        queue.add(item);
+        System.out.println("生产: " + item + " 队列大小: " + queue.size());
+        notifyAll();  // 通知消费者
+    }
+
+    // 消费者
+    public synchronized int consume() throws InterruptedException {
+        while (queue.isEmpty()) {
+            wait();  // 队列空了，等待生产者生产
+        }
+        int item = queue.poll();
+        System.out.println("消费: " + item + " 队列大小: " + queue.size());
+        notifyAll();  // 通知生产者
+        return item;
+    }
+
+    public static void main(String[] args) {
+        ProducerConsumer pc = new ProducerConsumer();
+
+        // 生产者线程
+        new Thread(() -> {
+            for (int i = 0; i < 10; i++) {
+                try { pc.produce(i); } catch (InterruptedException e) { break; }
+            }
+        }).start();
+
+        // 消费者线程
+        new Thread(() -> {
+            for (int i = 0; i < 10; i++) {
+                try { pc.consume(); } catch (InterruptedException e) { break; }
+            }
+        }).start();
+    }
+}
+```
+
+```
+wait/notify 通信流程：
+
+  生产者                   共享队列                   消费者
+     │                   ┌──────────┐                 │
+     │──produce()──▶    │ [1,2,3,  │    ◀──consume()──│
+     │                   │  4,5]    │                 │
+     │                   │ 满了!    │                 │
+     │──wait()──┐        └──────────┘       ┌──consume()
+     │  (释放锁) │                           │  取出 1
+     │  挂起...  │        ┌──────────┐       │
+     │          │        │ [2,3,4,5]│       │
+     │          │        └──────────┘       │
+     │          │◀────notifyAll()───────────┘
+     │  被唤醒   │                           │
+     │  重新竞争锁│                           │
+     │──produce()                            │
+     │                                       │
+
+  ⚠️ 重要规则：
+  ┌────────────────────────────────────────────────────┐
+  │  1. wait/notify 必须在 synchronized 块中调用         │
+  │  2. 用 while 循环检查条件，不要用 if（虚假唤醒）     │
+  │  3. 优先用 notifyAll() 而非 notify()                │
+  │  4. 实际开发中更推荐用 JUC 的工具替代                 │
+  └────────────────────────────────────────────────────┘
+```
+
+---
+
+## 5. 对比 Go 的并发
+
+```
+┌─────────────────────────────────────────────────────────┐
+│            Java 线程 vs Go Goroutine                     │
+├──────────────────────┬──────────────────────────────────┤
+│       Java           │           Go                     │
+├──────────────────────┼──────────────────────────────────┤
+│ new Thread()         │ go func()                        │
+│ ~1MB 栈              │ ~2KB 栈                          │
+│ 1:1 (OS线程)         │ M:N (用户态调度)                  │
+│ synchronized         │ sync.Mutex                       │
+│ wait/notify          │ channel                          │
+│ ExecutorService      │ goroutine + channel              │
+│ CompletableFuture    │ goroutine + channel              │
+│ 显式共享内存          │ "通过通信共享内存"                 │
+├──────────────────────┴──────────────────────────────────┤
+│                                                         │
+│  Java: 更成熟的工具链，更多的并发数据结构                  │
+│  Go:   更轻量，语言级支持，写起来更简单                    │
+│                                                         │
+│  两者都要掌握：                                           │
+│  Java 主战场 = 企业级后端、大数据                          │
+│  Go 主战场   = 基础设施、云原生、高性能网络服务             │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+```
+
+**下一节：** [02 - JMM 内存模型](02-jmm.md) — 理解 volatile、happens-before、指令重排

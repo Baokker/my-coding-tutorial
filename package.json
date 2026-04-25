@@ -1,0 +1,17 @@
+{
+  "name": "my-coding-tutorial",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "docs:dev": "vitepress dev tutorials",
+    "docs:build": "vitepress build tutorials",
+    "docs:preview": "vitepress preview tutorials"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "vitepress": "^1.6.4"
+  }
+}
