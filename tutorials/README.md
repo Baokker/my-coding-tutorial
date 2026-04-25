@@ -43,19 +43,19 @@
 
 | 模块 | 目录 | 子文件数 | 内容概要 |
 |------|------|---------|---------|
-| 01 | [Go 语言基础](01-go-basics/) | 5 + README | 语法、复合类型、函数接口、并发(GMP)、实战爬虫 |
-| 02 | [Java 高并发](02-java-concurrency/) | 5 + README | 线程、JMM、JUC、线程池、实战订单系统 |
-| 03 | [高并发架构](03-architecture/) | 4 + README | 缓存、消息队列、限流熔断、分库分表 |
-| 04 | [AI Agent](04-agent/) | 2 + README | ReAct 模式、Go 实现 Agent |
-| 05 | [RAG](05-rag/) | 2 + README | 全链路详解、Go 实现 RAG |
-| 06 | [MCP](06-mcp/) | 2 + README | 协议详解、Go 实现 MCP Server |
-| 07 | [Claude Code](07-claude-code/) | 2 + README | 架构分析、核心技术详解 |
-| 08 | [OpenClaw & OpenCode](08-openclaw-opencode/) | 2 + README | 开源项目架构分析与对比 |
-| 09 | [Docker & K8s](09-docker-k8s/) | 2 + README | Docker 核心、Dockerfile、K8s 架构与部署 |
-| 10 | [消息队列深入](10-message-queue-deep/) | 2 + README | Kafka 深入原理、RocketMQ 架构与对比 |
-| 11 | [向量数据库 Milvus](11-vector-database/) | 1 + README | 索引算法(HNSW/IVF)、Milvus 架构、Go SDK |
-| 12 | [Grafana 监控](12-grafana-monitoring/) | 1 + README | 可观测性三支柱、Prometheus+Grafana、Go 埋点 |
-| 13 | [LangChain4j](13-langchain4j/) | 1 + README | AI Services、RAG、Tool Use、Spring Boot 集成 |
+| 01 | [Go 语言基础](01-go-basics/README) | 5 + README | 语法、复合类型、函数接口、并发(GMP)、实战爬虫 |
+| 02 | [Java 高并发](02-java-concurrency/README) | 5 + README | 线程、JMM、JUC、线程池、实战订单系统 |
+| 03 | [高并发架构](03-architecture/README) | 4 + README | 缓存、消息队列、限流熔断、分库分表 |
+| 04 | [AI Agent](04-agent/README) | 2 + README | ReAct 模式、Go 实现 Agent |
+| 05 | [RAG](05-rag/README) | 2 + README | 全链路详解、Go 实现 RAG |
+| 06 | [MCP](06-mcp/README) | 2 + README | 协议详解、Go 实现 MCP Server |
+| 07 | [Claude Code](07-claude-code/README) | 2 + README | 架构分析、核心技术详解 |
+| 08 | [OpenClaw & OpenCode](08-openclaw-opencode/README) | 2 + README | 开源项目架构分析与对比 |
+| 09 | [Docker & K8s](09-docker-k8s/README) | 2 + README | Docker 核心、Dockerfile、K8s 架构与部署 |
+| 10 | [消息队列深入](10-message-queue-deep/README) | 2 + README | Kafka 深入原理、RocketMQ 架构与对比 |
+| 11 | [向量数据库 Milvus](11-vector-database/README) | 1 + README | 索引算法(HNSW/IVF)、Milvus 架构、Go SDK |
+| 12 | [Grafana 监控](12-grafana-monitoring/README) | 1 + README | 可观测性三支柱、Prometheus+Grafana、Go 埋点 |
+| 13 | [LangChain4j](13-langchain4j/README) | 1 + README | AI Services、RAG、Tool Use、Spring Boot 集成 |
 
 **总计: 13 个模块，31 个教程文件 + 13 个索引 = 44 个文件**
 
