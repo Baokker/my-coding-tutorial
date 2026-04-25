@@ -468,4 +468,4 @@ go run -race main.go
 
 **模块一完成！** 🎉
 
-**下一个模块：** [模块二：Java 高并发编程](../02-java-concurrency/README.md)
+**下一个模块：** [模块二：Java 高并发编程](../02-java-concurrency/)

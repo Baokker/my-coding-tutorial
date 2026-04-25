@@ -283,4 +283,4 @@ Claude Code 的权限控制系统:
 
 **模块七完成！**
 
-**下一个模块：** [模块八：OpenClaw & OpenCode 架构](../08-openclaw-opencode/README.md)
+**下一个模块：** [模块八：OpenClaw & OpenCode 架构](../08-openclaw-opencode/)

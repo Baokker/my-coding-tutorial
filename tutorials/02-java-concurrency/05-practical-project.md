@@ -332,4 +332,4 @@ public class OrderSystem {
 
 **模块二完成！**
 
-**下一个模块：** [模块三：高并发架构设计](../03-architecture/README.md)
+**下一个模块：** [模块三：高并发架构设计](../03-architecture/)

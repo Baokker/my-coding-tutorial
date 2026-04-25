@@ -14,29 +14,29 @@ export default defineConfig({
       {
         text: '基础语言',
         items: [
-          { text: 'Go 语言基础', link: '/01-go-basics/README' },
-          { text: 'Java 高并发', link: '/02-java-concurrency/README' },
+          { text: 'Go 语言基础', link: '/01-go-basics/' },
+          { text: 'Java 高并发', link: '/02-java-concurrency/' },
         ],
       },
       {
         text: '架构 & 基础设施',
         items: [
-          { text: '高并发架构', link: '/03-architecture/README' },
-          { text: 'Docker & K8s', link: '/09-docker-k8s/README' },
-          { text: '消息队列深入', link: '/10-message-queue-deep/README' },
-          { text: 'Grafana 监控', link: '/12-grafana-monitoring/README' },
+          { text: '高并发架构', link: '/03-architecture/' },
+          { text: 'Docker & K8s', link: '/09-docker-k8s/' },
+          { text: '消息队列深入', link: '/10-message-queue-deep/' },
+          { text: 'Grafana 监控', link: '/12-grafana-monitoring/' },
         ],
       },
       {
         text: 'AI 技术栈',
         items: [
-          { text: 'AI Agent', link: '/04-agent/README' },
-          { text: 'RAG', link: '/05-rag/README' },
-          { text: 'MCP', link: '/06-mcp/README' },
-          { text: 'Claude Code', link: '/07-claude-code/README' },
-          { text: 'OpenClaw & OpenCode', link: '/08-openclaw-opencode/README' },
-          { text: '向量数据库', link: '/11-vector-database/README' },
-          { text: 'LangChain4j', link: '/13-langchain4j/README' },
+          { text: 'AI Agent', link: '/04-agent/' },
+          { text: 'RAG', link: '/05-rag/' },
+          { text: 'MCP', link: '/06-mcp/' },
+          { text: 'Claude Code', link: '/07-claude-code/' },
+          { text: 'OpenClaw & OpenCode', link: '/08-openclaw-opencode/' },
+          { text: '向量数据库', link: '/11-vector-database/' },
+          { text: 'LangChain4j', link: '/13-langchain4j/' },
         ],
       },
     ],
@@ -46,7 +46,7 @@ export default defineConfig({
         {
           text: '01 · Go 语言基础',
           items: [
-            { text: '模块概览', link: '/01-go-basics/README' },
+            { text: '模块概览', link: '/01-go-basics/' },
             { text: '语法速览', link: '/01-go-basics/01-syntax-overview' },
             { text: '复合类型', link: '/01-go-basics/02-composite-types' },
             { text: '函数与接口', link: '/01-go-basics/03-functions-and-interfaces' },
@@ -59,7 +59,7 @@ export default defineConfig({
         {
           text: '02 · Java 高并发',
           items: [
-            { text: '模块概览', link: '/02-java-concurrency/README' },
+            { text: '模块概览', link: '/02-java-concurrency/' },
             { text: '线程基础', link: '/02-java-concurrency/01-thread-basics' },
             { text: 'Java 内存模型', link: '/02-java-concurrency/02-jmm' },
             { text: 'JUC 工具箱', link: '/02-java-concurrency/03-juc-toolkit' },
@@ -72,7 +72,7 @@ export default defineConfig({
         {
           text: '03 · 高并发架构',
           items: [
-            { text: '模块概览', link: '/03-architecture/README' },
+            { text: '模块概览', link: '/03-architecture/' },
             { text: '缓存设计', link: '/03-architecture/01-caching' },
             { text: '消息队列', link: '/03-architecture/02-message-queue' },
             { text: '限流 & 熔断', link: '/03-architecture/03-rate-limiting' },
@@ -84,7 +84,7 @@ export default defineConfig({
         {
           text: '04 · AI Agent',
           items: [
-            { text: '模块概览', link: '/04-agent/README' },
+            { text: '模块概览', link: '/04-agent/' },
             { text: 'Agent 核心概念', link: '/04-agent/01-agent-concepts' },
             { text: 'Go 实现 Agent', link: '/04-agent/02-build-agent-in-go' },
           ],
@@ -94,7 +94,7 @@ export default defineConfig({
         {
           text: '05 · RAG',
           items: [
-            { text: '模块概览', link: '/05-rag/README' },
+            { text: '模块概览', link: '/05-rag/' },
             { text: 'RAG 全链路详解', link: '/05-rag/01-rag-pipeline' },
             { text: 'Go 实现 RAG', link: '/05-rag/02-rag-in-go' },
           ],
@@ -104,7 +104,7 @@ export default defineConfig({
         {
           text: '06 · MCP',
           items: [
-            { text: '模块概览', link: '/06-mcp/README' },
+            { text: '模块概览', link: '/06-mcp/' },
             { text: 'MCP 协议详解', link: '/06-mcp/01-mcp-protocol' },
             { text: 'Go 实现 MCP Server', link: '/06-mcp/02-mcp-server-go' },
           ],
@@ -114,7 +114,7 @@ export default defineConfig({
         {
           text: '07 · Claude Code',
           items: [
-            { text: '模块概览', link: '/07-claude-code/README' },
+            { text: '模块概览', link: '/07-claude-code/' },
             { text: '架构分析', link: '/07-claude-code/01-architecture' },
             { text: '核心技术详解', link: '/07-claude-code/02-core-techniques' },
           ],
@@ -124,7 +124,7 @@ export default defineConfig({
         {
           text: '08 · OpenClaw & OpenCode',
           items: [
-            { text: '模块概览', link: '/08-openclaw-opencode/README' },
+            { text: '模块概览', link: '/08-openclaw-opencode/' },
             { text: 'OpenClaw 分析', link: '/08-openclaw-opencode/01-openclaw' },
             { text: 'OpenCode 分析', link: '/08-openclaw-opencode/02-opencode' },
           ],
@@ -134,7 +134,7 @@ export default defineConfig({
         {
           text: '09 · Docker & K8s',
           items: [
-            { text: '模块概览', link: '/09-docker-k8s/README' },
+            { text: '模块概览', link: '/09-docker-k8s/' },
             { text: 'Docker 核心', link: '/09-docker-k8s/01-docker' },
             { text: 'Kubernetes', link: '/09-docker-k8s/02-kubernetes' },
           ],
@@ -144,7 +144,7 @@ export default defineConfig({
         {
           text: '10 · 消息队列深入',
           items: [
-            { text: '模块概览', link: '/10-message-queue-deep/README' },
+            { text: '模块概览', link: '/10-message-queue-deep/' },
             { text: 'Kafka 深入原理', link: '/10-message-queue-deep/01-kafka-deep' },
             { text: 'RocketMQ 架构', link: '/10-message-queue-deep/02-rocketmq' },
           ],
@@ -154,7 +154,7 @@ export default defineConfig({
         {
           text: '11 · 向量数据库',
           items: [
-            { text: '模块概览', link: '/11-vector-database/README' },
+            { text: '模块概览', link: '/11-vector-database/' },
             { text: 'Milvus 深入', link: '/11-vector-database/01-milvus' },
           ],
         },
@@ -163,7 +163,7 @@ export default defineConfig({
         {
           text: '12 · Grafana 监控',
           items: [
-            { text: '模块概览', link: '/12-grafana-monitoring/README' },
+            { text: '模块概览', link: '/12-grafana-monitoring/' },
             { text: '可观测性体系', link: '/12-grafana-monitoring/01-observability' },
           ],
         },
@@ -172,7 +172,7 @@ export default defineConfig({
         {
           text: '13 · LangChain4j',
           items: [
-            { text: '模块概览', link: '/13-langchain4j/README' },
+            { text: '模块概览', link: '/13-langchain4j/' },
             { text: 'LangChain4j 全解', link: '/13-langchain4j/01-langchain4j' },
           ],
         },

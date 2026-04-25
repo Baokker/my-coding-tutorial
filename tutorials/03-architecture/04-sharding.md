@@ -236,4 +236,4 @@ func main() {
 
 **模块三完成！**
 
-**下一个模块：** [模块四：AI Agent 架构](../04-agent/README.md)
+**下一个模块：** [模块四：AI Agent 架构](../04-agent/)

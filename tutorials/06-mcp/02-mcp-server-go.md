@@ -371,4 +371,4 @@ func main() {
 
 **模块六完成！**
 
-**下一个模块：** [模块七：Claude Code 底层原理](../07-claude-code/README.md)
+**下一个模块：** [模块七：Claude Code 底层原理](../07-claude-code/)
